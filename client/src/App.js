@@ -18,12 +18,12 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-      <div className="App">
-        <AppNavbar />
-        <Container>
-          
-        </Container>
-      </div>
+        <div className="App">
+          <AppNavbar />
+          <Container>
+              
+          </Container>
+        </div>
       </Provider>
     );
   }

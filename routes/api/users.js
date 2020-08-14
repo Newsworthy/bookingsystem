@@ -12,7 +12,7 @@ const User = require("../../models/User");
 
 router.post("/", (req, res) => {
   const { name, email, password } = req.body;
-    console.log("Test 2");
+
   // Simple Validation
   if (!name || !email || !password) {
     return res.status(400).json({ msg: "Please enter all fields" });
