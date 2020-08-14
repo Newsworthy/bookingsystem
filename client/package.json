@@ -12,6 +12,9 @@
   "author": "Nick Smith",
   "license": "ISC",
   "dependencies": {
+    "@testing-library/jest-dom": "^5.11.3",
+    "@testing-library/react": "^10.4.8",
+    "@testing-library/user-event": "^12.1.1",
     "axios": "^0.19.2",
     "bootstrap": "^4.5.2",
     "react": "^16.13.1",
