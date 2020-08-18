@@ -64,6 +64,7 @@ router.post("/", (req, res) => {
 // @access  Public
 
 router.put('/forgotpassword', (req, res) => {
+  console.log("Here is req.body: " + JSON.stringify(req.body))
   const { email } = req.body;
   if (!email) {
     return res.status(400).json({ msg: "Please enter all fields" });
@@ -80,20 +81,17 @@ router.put('/forgotpassword', (req, res) => {
         expiresIn: '15m'
       });
 
-      // const tokenString = new String(token);
-      // const token = "This should change";
-      console.log("Token is: " + token);
       const newLink = {
         resetLink: token,
       }
-
-      // console.log("obj is " + JSON.stringify(newLink));
-      // console.log("User.resetLink is " + user.resetLink);
+      // Take resetLink and implant it into user record
       user = _.extend(user, newLink);
       user.save((err, result) => {
         if (err) {
-          return res.status(400).json({ error: "Something went wrong..." + err });
+          return res.status(400).json({ msg: "Something went wrong..." + err });
         } else {
+          // Begin mailout function
+
           async function main() {
             const testAccount = await nodemailer.createTestAccount();
             console.log("Client URL is: " + process.env.CLIENT_URL)
@@ -133,6 +131,7 @@ router.put('/forgotpassword', (req, res) => {
 // @access  Public
 
 router.get('/resetpassword/:resetLink', (req, res) => {
+  const { resetLink } = req.params;
   console.log("Hi there, you made it! " + resetLink)
 });
 
@@ -146,7 +145,7 @@ router.put('/resetpassword/:resetLink', (req, res) => {
       }
       User.findOne({ resetLink }, (err, user) => {
         if (err || !user) {
-          return res.status(400).json({ error: "User with this token doesn't exist" });
+          return res.status(400).json({ msg: "User with this token doesn't exist" });
         }
         // My god you better hash this
         console.log("newPass is: " + newPass)
@@ -162,19 +161,16 @@ router.put('/resetpassword/:resetLink', (req, res) => {
           user = _.extend(user, obj);
           user.save((err, result) => {
             if (err) {
-              return res.status(400).json({ error: "Reset password error" });
+              return res.status(400).json({ msg: "Reset password error" });
             } else {
-              return res.status(200).json({ message: "Your password has been changed. Also Here is what obj is: " + JSON.stringify(obj) });
+              return res.status(200).json({ msg: "Your password has been changed." });
             }
           })
         })
-        
-
-
       })
     })
   } else {
-    return res.status(401).json({ error: "Authentication error!" });
+    return res.status(401).json({ msg: "Authentication error!" });
   }
 });
 

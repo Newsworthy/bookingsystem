@@ -104,7 +104,7 @@ export const logout = () => {
 
 // Reset their password
 export const passReset = ({ email }) => dispatch => {
-  console.log("passReset activated")
+  console.log("passReset activated for " + email)
   const config = {
     headers: {
       'Content-Type': 'application/json'
@@ -112,9 +112,9 @@ export const passReset = ({ email }) => dispatch => {
   };
 
   const body = JSON.stringify({ email });
-
+  console.log("Body is: " + body);
   axios
-    .post('/api/users/passwordreset', body, config)
+    .put('/api/users/forgotpassword', body, config)
     .then(res =>
       dispatch({
         type: PASS_RESET,

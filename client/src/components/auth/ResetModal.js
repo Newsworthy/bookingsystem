@@ -12,23 +12,44 @@ import {
   Alert,
 } from "reactstrap";
 import { connect } from "react-redux";
-// import { addItem } from "../../actions/itemActions";
 import { passReset } from "../../actions/authActions";
 import PropTypes from "prop-types";
+import { clearErrors } from "../../actions/errorActions";
 
 class ResetModal extends Component {
   state = {
     modal: false,
-    name: "",
+    email: "",
+    msg: null,
   };
 
   static propTypes = {
     isAuthenticated: PropTypes.bool,
   };
 
+  componentDidUpdate(prevProps) {
+    const { error, isAuthenticated } = this.props;
+    if (error !== prevProps.error) {
+      // Check for register error
+      if (error.id === "RESET_FAIL") {
+        this.setState({ msg: error.msg.msg });
+      } else {
+        this.setState({ msg: null });
+      }
+    }
+    //If authenticated close modal
+    if (this.state.modal) {
+      if (isAuthenticated) {
+        this.toggle();
+      }
+    }
+  }
+
   toggle = () => {
+    this.props.clearErrors();
     this.setState({
       modal: !this.state.modal,
+
     });
   };
 
@@ -40,34 +61,21 @@ class ResetModal extends Component {
     e.preventDefault();
 
     const { email } = this.state;
-    console.log("Email to reset is: " + email)
-    const emailToReset = email;
-    // const newItem = {
-    //   name: this.state.name,
-    // };
-
-    // // Add item via addItem actions
-    this.props.passReset(emailToReset);
+    console.log("Modal Email to reset is: " + email)
+    // console.log("Props " + this.state.email)
+    this.props.passReset(email);
+    // this.props.passReset(emailToReset);
     // Close Modal
-    this.toggle();
   };
 
   render() {
     return (
       <div>
-        {this.props.isAuthenticated ? (
-          <Button
-            color="dark"
-            style={{ marginBottom: "2rem" }}
-            onClick={this.toggle}
-          >
-            Add Item
-          </Button>
-        ) : (
-            <NavLink onClick={this.toggle} href="#">
-              Reset Password
-            </NavLink>
-          )}
+
+        <NavLink onClick={this.toggle} href="#">
+          Reset Password
+        </NavLink>
+
 
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Reset Password</ModalHeader>
@@ -100,6 +108,7 @@ class ResetModal extends Component {
 const mapStateToProps = (state) => ({
   item: state.item,
   isAuthenticated: state.auth.isAuthenticated,
+  error: state.error,
 });
 
-export default connect(mapStateToProps, {})(ResetModal);
+export default connect(mapStateToProps, { passReset, clearErrors })(ResetModal);
