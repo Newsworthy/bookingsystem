@@ -7,12 +7,28 @@ const BookingSchema = new Schema({
     type: String,
     required: true
   },
+  bookerId: {
+      type: String,
+      required: true
+  },
+  requestSection: {
+      type: String,
+      required: true,
+      enum: [
+          "barbell",
+          "machines"
+      ],
+  },
   requestedDate: {
     type: Date,
     default: Date.now
   },
+  duation: {
+      type: Number,
+      default: 90
+  },
   bookingDate: {
-      type: Date
+    type: Date
   }
 });
 

@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const config = require('config');
-
+require('dotenv').config(); 
 const app = express();
 
 // Bodyparser Middleware

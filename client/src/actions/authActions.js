@@ -9,7 +9,9 @@ import {
   LOGIN_FAIL,
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
-  REGISTER_FAIL
+  REGISTER_FAIL,
+  PASS_RESET,
+  RESET_FAIL,
 } from './types';
 
 // Check token & load user
@@ -98,6 +100,35 @@ export const logout = () => {
   return {
     type: LOGOUT_SUCCESS
   };
+};
+
+// Reset their password
+export const passReset = ({ email }) => dispatch => {
+  console.log("passReset activated")
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  const body = JSON.stringify({ email });
+
+  axios
+    .post('/api/users/passwordreset', body, config)
+    .then(res =>
+      dispatch({
+        type: PASS_RESET,
+        payload: res.data
+      })
+    )
+    .catch(err => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, 'RESET_FAIL')
+      );
+      dispatch({
+        type: RESET_FAIL
+      });
+    });
 };
 
 // Setup config/headers and token

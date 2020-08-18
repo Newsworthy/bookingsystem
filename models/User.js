@@ -11,6 +11,7 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    lowercase: true,
   },
   password: {
     type: String,
@@ -20,6 +21,10 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  resetLink: {
+    type: String,
+    default: '',
+  }
 });
 
 module.exports = User = mongoose.model("user", UserSchema);
