@@ -93,28 +93,29 @@ router.put('/forgotpassword', (req, res) => {
           // Begin mailout function
 
           async function main() {
-            const testAccount = await nodemailer.createTestAccount();
-            console.log("Client URL is: " + process.env.CLIENT_URL)
             const transporter = nodemailer.createTransport({
-              host: "smtp.ethereal.email",
-              port: 587,
-              secure: false,
+              service: 'gmail',
               auth: {
-                user: testAccount.user,
-                pass: testAccount.pass,
-              },
-            }),
+                user: 'nick.shoots.news@gmail.com',
+                pass: 'twopfbycaypcbanc'
+              }
+            });
 
-              info = await transporter.sendMail({
-                from: '<derp@herp.com>',
-                to: user.email,
-                subject: "Password reset",
-                text: `Hi there. You, or someone with your email address has requested a password change. If so, please copy and paste this link in your browser: ${process.env.CLIENT_URL}/api/users/resetpassword/${token}/ - Of course, if this wasn't you, then don't do a thing. Someone is screwing around, and you might want to change your email password to be safe. This link will expire in fifteen minutes.`,
-                html: `<strong>Password reset requested</strong><p>Hi there.</p><p>You, or someone with your email address has requested a password change. If so, please click this link to reset your password: <a href='${process.env.CLIENT_URL}/api/users/resetpassword/${token}/'>Reset Password</a></p><p>Of course, if this wasn't you, then don't do a thing. Someone is screwing around, and you might want to change your email password to be safe.</p><p>This link will expire in fifteen minutes.</p>`
-              });
+            const mailOptions = {
+              from: 'nick.shoots.news@gmail.com',
+              to: user.email,
+              subject: 'Password Reset Request',
+              text: `Hi there. You, or someone with your email address has requested a password change. If so, please copy and paste this link in your browser: ${process.env.CLIENT_URL}/api/users/resetpassword/${token}/ - Of course, if this wasn't you, then don't do a thing. Someone is screwing around, and you might want to change your email password to be safe. This link will expire in fifteen minutes.`,
+              html: `<strong>Password reset requested</strong><p>Hi there.</p><p>You, or someone with your email address has requested a password change. If so, please click this link to reset your password: <a href='${process.env.CLIENT_URL}/api/users/resetpassword/${token}/'>Reset Password</a></p><p>Of course, if this wasn't you, then don't do a thing. Someone is screwing around, and you might want to change your email password to be safe.</p><p>This link will expire in fifteen minutes.</p>`
+            };
 
-            console.log("Message sent: %s", info.messageId);
-            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+            transporter.sendMail(mailOptions, function (error, info) {
+              if (error) {
+                console.log(error);
+              } else {
+                console.log('Email sent: ' + info.response);
+              }
+            })
 
           }
           main().catch(console.error);
@@ -132,7 +133,21 @@ router.put('/forgotpassword', (req, res) => {
 
 router.get('/resetpassword/:resetLink', (req, res) => {
   const { resetLink } = req.params;
-  console.log("Hi there, you made it! " + resetLink)
+  // verify the reset link is genuine
+  jwt.verify(resetLink, process.env.JWT_SECRET, function (err, decodedData) {
+    if (err) {
+      return res.status(401).json({ msg: "Incorrect token or it is expired. " + err });
+    } else {
+      User.findOne({ resetLink }, (err, user) => {
+        if (err || !user) {
+          return res.status(400).json({ msg: "User with this token doesn't exist" });
+        } else {
+          console.log("Hi there, you made it! " + resetLink)
+          return res.status(200).json({ msg: "I like what you got, good job!" })
+        }
+      })
+    }
+  })
 });
 
 router.put('/resetpassword/:resetLink', (req, res) => {
@@ -175,3 +190,31 @@ router.put('/resetpassword/:resetLink', (req, res) => {
 });
 
 module.exports = router;
+
+
+// async function main() {
+//   const testAccount = await nodemailer.createTestAccount();
+//   // console.log("Client URL is: " + process.env.CLIENT_URL)
+//   const transporter = nodemailer.createTransport({
+//     host: "smtp.ethereal.email",
+//     port: 587,
+//     secure: false,
+//     auth: {
+//       user: testAccount.user,
+//       pass: testAccount.pass,
+//     },
+//   }),
+
+//     info = await transporter.sendMail({
+//       from: '<derp@herp.com>',
+//       to: user.email,
+//       subject: "Password reset",
+//       text: `Hi there. You, or someone with your email address has requested a password change. If so, please copy and paste this link in your browser: ${process.env.CLIENT_URL}/api/users/resetpassword/${token}/ - Of course, if this wasn't you, then don't do a thing. Someone is screwing around, and you might want to change your email password to be safe. This link will expire in fifteen minutes.`,
+//       html: `<strong>Password reset requested</strong><p>Hi there.</p><p>You, or someone with your email address has requested a password change. If so, please click this link to reset your password: <a href='${process.env.CLIENT_URL}/api/users/resetpassword/${token}/'>Reset Password</a></p><p>Of course, if this wasn't you, then don't do a thing. Someone is screwing around, and you might want to change your email password to be safe.</p><p>This link will expire in fifteen minutes.</p>`
+//     });
+
+//   console.log("Message sent: %s", info.messageId);
+//   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+
+// }
+// main().catch(console.error);

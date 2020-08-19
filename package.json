@@ -23,7 +23,8 @@
     "lodash": "^4.17.20",
     "moment": "^2.27.0",
     "mongoose": "^5.9.26",
-    "nodemailer": "^6.4.11"
+    "nodemailer": "^6.4.11",
+    "react-scripts": "^3.4.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
