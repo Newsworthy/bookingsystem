@@ -13,4 +13,5 @@ export const REGISTER_FAIL = "REGISTER_FAIL";
 export const GET_ERRORS = "GET_ERRORS";
 export const CLEAR_ERRORS = "CLEAR_ERRORS";
 export const PASS_RESET = "PASS_RESET";
+export const PASS_FORGOT = "PASS_FORGOT";
 export const RESET_FAIL = "RESET_FAIL";

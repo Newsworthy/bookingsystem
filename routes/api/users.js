@@ -14,6 +14,7 @@ const User = require("../../models/User");
 // @access  Public
 
 router.post("/", (req, res) => {
+  console.log('router.post"/"');
   const { name, email, password } = req.body;
 
   // Simple Validation
@@ -64,6 +65,7 @@ router.post("/", (req, res) => {
 // @access  Public
 
 router.put('/forgotpassword', (req, res) => {
+  console.log("router.put('/forgotpassword'");
   // console.log("Here is req.body: " + JSON.stringify(req.body))
   const { email } = req.body;
   if (!email) {
@@ -92,34 +94,34 @@ router.put('/forgotpassword', (req, res) => {
         } else {
           // Begin mailout function
 
-          async function main() {
-            const transporter = nodemailer.createTransport({
-              service: 'gmail',
-              auth: {
-                user: 'nick.shoots.news@gmail.com',
-                pass: 'twopfbycaypcbanc'
-              }
-            });
+          // async function main() {
+          //   const transporter = nodemailer.createTransport({
+          //     service: 'gmail',
+          //     auth: {
+          //       user: 'nick.shoots.news@gmail.com',
+          //       pass: 'twopfbycaypcbanc'
+          //     }
+          //   });
 
-            const mailOptions = {
-              from: 'nick.shoots.news@gmail.com',
-              to: user.email,
-              subject: 'Password Reset Request',
-              text: `Hi there. You, or someone with your email address has requested a password change. If so, please copy and paste this link in your browser: ${process.env.CLIENT_URL}/api/users/resetpassword/${token}/ - Of course, if this wasn't you, then don't do a thing. Someone is screwing around, and you might want to change your email password to be safe. This link will expire in fifteen minutes.`,
-              html: `<strong>Password reset requested</strong><p>Hi there.</p><p>You, or someone with your email address has requested a password change. If so, please click this link to reset your password: <a href='${process.env.CLIENT_URL}/api/users/resetpassword/${token}/'>Reset Password</a></p><p>Of course, if this wasn't you, then don't do a thing. Someone is screwing around, and you might want to change your email password to be safe.</p><p>This link will expire in fifteen minutes.</p>`
-            };
+          //   const mailOptions = {
+          //     from: 'nick.shoots.news@gmail.com',
+          //     to: user.email,
+          //     subject: 'Password Reset Request',
+          //     text: `Hi there. You, or someone with your email address has requested a password change. If so, please copy and paste this link in your browser: ${process.env.CLIENT_URL}/api/users/resetpassword/${token}/ - Of course, if this wasn't you, then don't do a thing. Someone is screwing around, and you might want to change your email password to be safe. This link will expire in fifteen minutes.`,
+          //     html: `<strong>Password reset requested</strong><p>Hi there.</p><p>You, or someone with your email address has requested a password change. If so, please click this link to reset your password: <a href='${process.env.CLIENT_URL}/api/users/resetpassword/${token}/'>Reset Password</a></p><p>Of course, if this wasn't you, then don't do a thing. Someone is screwing around, and you might want to change your email password to be safe.</p><p>This link will expire in fifteen minutes.</p>`
+          //   };
 
-            transporter.sendMail(mailOptions, function (error, info) {
-              if (error) {
-                console.log(error);
-              } else {
-                console.log('Email sent: ' + info.response);
-              }
-            })
+          //   transporter.sendMail(mailOptions, function (error, info) {
+          //     if (error) {
+          //       console.log(error);
+          //     } else {
+          //       console.log('Email sent: ' + info.response);
+          //     }
+          //   })
 
-          }
-          main().catch(console.error);
-
+          // }
+          // main().catch(console.error);
+          console.log("Link: " + process.env.CLIENT_URL + "/api/users/resetpassword/" + token)
           return res.status(200).json({ msg: `An email has been sent to ${email} with further instructions` })
         }
       })
@@ -132,6 +134,7 @@ router.put('/forgotpassword', (req, res) => {
 // @access  Public
 
 router.get('/resetpassword/:resetLink', (req, res) => {
+  console.log("router.get('/resetpassword/:resetLink'");
   const { resetLink } = req.params;
   // verify the reset link is genuine
   jwt.verify(resetLink, process.env.JWT_SECRET, function (err, decodedData) {
@@ -151,8 +154,13 @@ router.get('/resetpassword/:resetLink', (req, res) => {
 });
 
 router.put('/resetpassword/:resetLink', (req, res) => {
+  console.log("router.put('/resetpassword/:resetLink'");
   const { resetLink } = req.params;
-  const { newPass } = req.body;
+  const { newPass, newPassMatch } = req.body;
+  if (newPass !== newPassMatch) {
+    return res.status(400).json({ msg: "Passwords don't match, please try again." })
+  }
+
   if (resetLink) {
     jwt.verify(resetLink, process.env.JWT_SECRET, function (err, decodedData) {
       if (err) {

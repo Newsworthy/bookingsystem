@@ -9,6 +9,7 @@ import { loadUser } from './actions/authActions';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import PassResetForm from './components/auth/PassResetForm';
 
 class App extends Component {
   componentDidMount() {
@@ -21,7 +22,9 @@ class App extends Component {
         <div className="App">
           <AppNavbar />
           <Container>
-              
+              <PassResetForm>
+                
+              </PassResetForm>
           </Container>
         </div>
       </Provider>

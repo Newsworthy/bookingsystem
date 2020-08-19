@@ -8,6 +8,7 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   PASS_RESET,
+  PASS_FORGOT,
 } from "../actions/types";
 
 const initialState = {
@@ -54,6 +55,7 @@ export default function (state = initialState, action) {
         isLoading: false,
       };
     case PASS_RESET:
+    case PASS_FORGOT:
       return {
         msg: action.payload.msg,
         token: null,

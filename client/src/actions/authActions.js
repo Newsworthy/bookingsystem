@@ -12,6 +12,7 @@ import {
   REGISTER_FAIL,
   PASS_RESET,
   RESET_FAIL,
+  PASS_FORGOT,
 } from './types';
 
 // Check token & load user
@@ -102,8 +103,8 @@ export const logout = () => {
   };
 };
 
-// Reset their password
-export const passReset = ({ email }) => dispatch => {
+// Initiate password reset
+export const passForgot = ({ email }) => dispatch => {
   // console.log("passReset activated for " + email)
   const config = {
     headers: {
@@ -115,6 +116,34 @@ export const passReset = ({ email }) => dispatch => {
   // console.log("Body is: " + body);
   axios
     .put('/api/users/forgotpassword', body, config)
+    .then(res =>
+      dispatch({
+        type: PASS_FORGOT,
+        payload: res.data
+      })
+    )
+    .catch(err => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, 'RESET_FAIL')
+      );
+      dispatch({
+        type: RESET_FAIL
+      });
+    });
+};
+
+export const passReset = ({ newPass, resetLink }) => dispatch => {
+  // console.log("passReset activated for " + email)
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  const body = JSON.stringify({ newPass, resetLink });
+  // console.log("Body is: " + body);
+  axios
+    .put('/api/users/resetpassword/' + resetLink, body, config)
     .then(res =>
       dispatch({
         type: PASS_RESET,
@@ -130,6 +159,7 @@ export const passReset = ({ email }) => dispatch => {
       });
     });
 };
+
 
 // Setup config/headers and token
 export const tokenConfig = getState => {

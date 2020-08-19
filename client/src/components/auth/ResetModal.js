@@ -12,7 +12,7 @@ import {
   Alert,
 } from "reactstrap";
 import { connect } from "react-redux";
-import { passReset } from "../../actions/authActions";
+import { passForgot } from "../../actions/authActions";
 import PropTypes from "prop-types";
 import { clearErrors } from "../../actions/errorActions";
 
@@ -80,7 +80,7 @@ class ResetModal extends Component {
     };
     // console.log("Modal Email to reset is: " + resetEmail)
     // console.log("Props " + this.state.email)
-    this.props.passReset(resetEmail);
+    this.props.passForgot(resetEmail);
     // this.props.passReset(emailToReset);
     // Close Modal
   };
@@ -129,4 +129,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { passReset, clearErrors })(ResetModal);
+export default connect(mapStateToProps, { passForgot, clearErrors })(ResetModal);

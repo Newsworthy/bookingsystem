@@ -20,14 +20,14 @@ const Booking = require("../../models/Booking");
 // @desc Create a POST
 // @access  Private
 
-router.post("/", (req, res) => {
-  const fixedDate = moment.utc(req.body.date);
-  const newBooking = new Booking({
-    name: req.body.name,
-    bookingDate: fixedDate,
-  });
-  newBooking.save().then((booking) => res.json(booking));
-});
+// router.post("/", (req, res) => {
+//   const fixedDate = moment.utc(req.body.date);
+//   const newBooking = new Booking({
+//     name: req.body.name,
+//     bookingDate: fixedDate,
+//   });
+//   newBooking.save().then((booking) => res.json(booking));
+// });
 
 // @route DELETE /api/bookings/:id
 // @desc Delete an booking
