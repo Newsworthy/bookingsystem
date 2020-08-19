@@ -64,7 +64,7 @@ router.post("/", (req, res) => {
 // @access  Public
 
 router.put('/forgotpassword', (req, res) => {
-  console.log("Here is req.body: " + JSON.stringify(req.body))
+  // console.log("Here is req.body: " + JSON.stringify(req.body))
   const { email } = req.body;
   if (!email) {
     return res.status(400).json({ msg: "Please enter all fields" });
@@ -119,7 +119,7 @@ router.put('/forgotpassword', (req, res) => {
           }
           main().catch(console.error);
 
-          return res.status(200).json({ msg: `Success! These should match: TOKEN - ${token} / RESET LINK - ${user.resetLink}` })
+          return res.status(200).json({ msg: `An email has been sent to ${email} with further instructions` })
         }
       })
     })

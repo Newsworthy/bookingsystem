@@ -15,6 +15,7 @@ const initialState = {
   isAuthenticated: null,
   isLoading: false,
   user: null,
+  msg: null,
 };
 
 export default function (state = initialState, action) {
@@ -54,7 +55,7 @@ export default function (state = initialState, action) {
       };
     case PASS_RESET:
       return {
-        ...state,
+        msg: action.payload.msg,
         token: null,
         user: null,
         isAuthenticated: false,

@@ -25,18 +25,30 @@ class ResetModal extends Component {
 
   static propTypes = {
     isAuthenticated: PropTypes.bool,
+    error: PropTypes.object.isRequired,
+    clearErrors: PropTypes.func.isRequired,
   };
 
   componentDidUpdate(prevProps) {
-    const { error, isAuthenticated } = this.props;
+    const { error, isAuthenticated, auth } = this.props;
+
+    if (auth !== prevProps.auth) {
+      if (auth.msg !== null) {
+        this.setState({ msg: auth.msg})
+      } else {
+        this.setState({ msg: null });
+      }
+    }    
+
     if (error !== prevProps.error) {
       // Check for register error
       if (error.id === "RESET_FAIL") {
         this.setState({ msg: error.msg.msg });
-      } else {
+      }  else {
         this.setState({ msg: null });
-      }
-    }
+      } 
+    } 
+    
     //If authenticated close modal
     if (this.state.modal) {
       if (isAuthenticated) {
@@ -58,12 +70,17 @@ class ResetModal extends Component {
   };
 
   onSubmit = (e) => {
+    this.props.clearErrors();
     e.preventDefault();
 
     const { email } = this.state;
-    console.log("Modal Email to reset is: " + email)
+
+    const resetEmail = {
+      email,
+    };
+    // console.log("Modal Email to reset is: " + resetEmail)
     // console.log("Props " + this.state.email)
-    this.props.passReset(email);
+    this.props.passReset(resetEmail);
     // this.props.passReset(emailToReset);
     // Close Modal
   };
@@ -109,6 +126,7 @@ const mapStateToProps = (state) => ({
   item: state.item,
   isAuthenticated: state.auth.isAuthenticated,
   error: state.error,
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps, { passReset, clearErrors })(ResetModal);
