@@ -17,7 +17,7 @@ import {
 import { connect } from 'react-redux'
 
 import PropTypes from "prop-types";
-import { register, passReset } from "../../actions/authActions";
+import { register, passReset, startPassReset } from "../../actions/authActions";
 import { clearErrors } from "../../actions/errorActions";
 
 class PassResetForm extends Component {
@@ -37,7 +37,7 @@ class PassResetForm extends Component {
     };
 
     componentDidMount() {
-        
+        startPassReset();
     }
 
     componentDidUpdate(prevProps) {
@@ -101,6 +101,8 @@ class PassResetForm extends Component {
     // DONE Delete the reset token in the backend after successful password change
 
     render() {
+        // const {resetLink} = req.params;
+        // console.log("Reset Link: " + resetLink);
         return (
             <div>
                 <Container>

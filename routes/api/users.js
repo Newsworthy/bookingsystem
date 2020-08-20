@@ -99,7 +99,7 @@ router.put('/forgotpassword', (req, res) => {
           //     service: 'gmail',
           //     auth: {
           //       user: 'nick.shoots.news@gmail.com',
-          //       pass: '****'
+          //       pass: process.env.GMAIL
           //     }
           //   });
 
@@ -129,8 +129,8 @@ router.put('/forgotpassword', (req, res) => {
   };
 });
 
-// @route PUT api/users/resetpassword
-// @desc Take link from email and reset password
+// @route GET api/users/resetpassword
+// @desc Take link from email and generate form for reset
 // @access  Public
 
 router.get('/resetpassword/:resetLink', (req, res) => {

@@ -132,6 +132,33 @@ export const passForgot = ({ email }) => dispatch => {
     });
 };
 
+export const startPassReset = ({ resetLink }) => dispatch => {
+  console.log("startPassReset Begins");
+
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+  
+  axios
+    .get('/api/users/resetpassword/', resetLink, config)
+    .then(res =>
+      dispatch({
+        type: PASS_RESET,
+        payload: res.data
+      })
+    )
+    .catch(err => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, 'RESET_FAIL')
+      );
+      dispatch({
+        type: RESET_FAIL
+      });
+    });
+}
+
 export const passReset = ({ newPass, resetLink }) => dispatch => {
   // console.log("passReset activated for " + email)
   const config = {

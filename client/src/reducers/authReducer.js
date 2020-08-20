@@ -57,6 +57,8 @@ export default function (state = initialState, action) {
     case PASS_RESET:
     case PASS_FORGOT:
       return {
+        ...state,
+        ...action.payload,
         msg: action.payload.msg,
         token: null,
         user: null,
