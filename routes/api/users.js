@@ -99,7 +99,7 @@ router.put('/forgotpassword', (req, res) => {
           //     service: 'gmail',
           //     auth: {
           //       user: 'nick.shoots.news@gmail.com',
-          //       pass: 'twopfbycaypcbanc'
+          //       pass: '****'
           //     }
           //   });
 
