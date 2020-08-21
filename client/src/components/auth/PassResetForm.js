@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import {
     Button,
@@ -27,17 +28,19 @@ class PassResetForm extends Component {
         email: "",
         password: "",
         msg: null,
+        resetLink: null,
     };
 
     static propTypes = {
-        // isAuthenticated: PropTypes.bool,
+        isAuthenticated: PropTypes.bool,
         error: PropTypes.object.isRequired,
         // register: PropTypes.func.isRequired,
         clearErrors: PropTypes.func.isRequired,
     };
 
     componentDidMount() {
-        startPassReset();
+        // console.log(this.props.match.params.token);
+        //Here I need to get the token from the address loaded, and set it to resetLink.
     }
 
     componentDidUpdate(prevProps) {
@@ -60,7 +63,16 @@ class PassResetForm extends Component {
         }
     }
 
-
+    toggle = () => {
+        console.log();
+        startPassReset();
+        
+        // console.log(req.params);
+        this.setState({
+          modal: !this.state.modal,
+        //   resetLink: req.params.resetLink,
+        });
+      };
 
     onChange = (e) => {
         this.setState({ [e.target.name]: e.target.value });
@@ -102,42 +114,55 @@ class PassResetForm extends Component {
 
     render() {
         // const {resetLink} = req.params;
+        const { isAuthenticated } = this.props;
         // console.log("Reset Link: " + resetLink);
         return (
             <div>
-                <Container>
-                    <Row>
-                        <Col Col sm="12" md={{ size: 6, offset: 3 }}>
-                            <h1>Test</h1>
-                            {this.state.msg ? (
-                                <Alert color="danger">{this.state.msg}</Alert>
-                            ) : null}
-                            <Form onSubmit={this.onSubmit}>
-                                <FormGroup>
-                                    <Label for="email">Enter your new password</Label>
-                                    <Input
-                                        type="password"
-                                        name="newPass"
-                                        id="newPass"
-                                        placeholder="New Password"
-                                        onChange={this.onChange}
-                                    />
-                                    <Input
-                                        type="password"
-                                        name="newPassMatch"
-                                        id="newPassMatch"
-                                        placeholder="Retype New Password"
-                                        onChange={this.onChange}
-                                    />
-                                    <Button color="dark" style={{ marginTop: "2rem" }} block>
-                                        Submit New Password
+                {isAuthenticated ? null : (
+                    <Container>
+                        <Row>
+                            <Col Col sm="12" md={{ size: 6, offset: 3 }}>
+                                <Button onClick={this.toggle} color="dark" style={{ marginTop: "2rem" }} block>
+                                    Reset Password
                             </Button>
-                                </FormGroup>
-                            </Form>
-                        </Col>
-                    </Row>
+                            <Modal isOpen={this.state.modal} toggle={this.toggle}>
+                            <ModalHeader>
 
-                </Container>
+                            
+                                {this.state.msg ? (
+                                    <Alert color="danger">{this.state.msg}</Alert>
+                                ) : null}
+                                </ModalHeader>
+                                <Form onSubmit={this.onSubmit}>
+                                    <FormGroup>
+                                        <Label for="email">Enter your new password</Label>
+                                        <Input
+                                            type="password"
+                                            name="newPass"
+                                            id="newPass"
+                                            placeholder="New Password"
+                                            onChange={this.onChange}
+                                        />
+                                        <Input
+                                            type="password"
+                                            name="newPassMatch"
+                                            id="newPassMatch"
+                                            placeholder="Retype New Password"
+                                            onChange={this.onChange}
+                                        />
+                                        <Button color="dark" style={{ marginTop: "2rem" }} block>
+                                            Submit New Password
+                            </Button>
+                                    </FormGroup>
+                                </Form>
+                                </Modal>
+                            </Col>
+                        </Row>
+
+                    </Container>
+                )
+                }
+
             </div>
         )
     }

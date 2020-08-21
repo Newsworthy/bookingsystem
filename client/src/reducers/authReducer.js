@@ -9,6 +9,7 @@ import {
   REGISTER_FAIL,
   PASS_RESET,
   PASS_FORGOT,
+  START_PASS_RESET,
 } from "../actions/types";
 
 const initialState = {
@@ -55,6 +56,7 @@ export default function (state = initialState, action) {
         isLoading: false,
       };
     case PASS_RESET:
+    case START_PASS_RESET:
     case PASS_FORGOT:
       return {
         ...state,

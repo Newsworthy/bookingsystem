@@ -22,7 +22,9 @@ class App extends Component {
         <div className="App">
           <AppNavbar />
           <Container>
-              
+              <PassResetForm>
+                
+              </PassResetForm>
           </Container>
         </div>
       </Provider>

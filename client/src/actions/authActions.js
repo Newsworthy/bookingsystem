@@ -13,6 +13,7 @@ import {
   PASS_RESET,
   RESET_FAIL,
   PASS_FORGOT,
+  START_PASS_RESET,
 } from './types';
 
 // Check token & load user
@@ -142,10 +143,10 @@ export const startPassReset = ({ resetLink }) => dispatch => {
   };
   
   axios
-    .get('/api/users/resetpassword/', resetLink, config)
+    .get(`/api/users/resetpassword/${resetLink}`, {}, config)
     .then(res =>
       dispatch({
-        type: PASS_RESET,
+        type: START_PASS_RESET,
         payload: res.data
       })
     )

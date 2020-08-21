@@ -129,8 +129,8 @@ router.put('/forgotpassword', (req, res) => {
   };
 });
 
-// @route GET api/users/resetpassword
-// @desc Take link from email and generate form for reset
+// @route PUT api/users/resetpassword
+// @desc Take link from email and reset password
 // @access  Public
 
 router.get('/resetpassword/:resetLink', (req, res) => {
@@ -145,6 +145,7 @@ router.get('/resetpassword/:resetLink', (req, res) => {
         if (err || !user) {
           return res.status(400).json({ msg: "User with this token doesn't exist" });
         } else {
+          // Success condition. Go ahead and allow the form to appear to reset the password
           console.log("Hi there, you made it! " + resetLink)
           return res.status(200).json({ msg: "I like what you got, good job!" })
         }
