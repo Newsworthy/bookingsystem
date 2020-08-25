@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 import AppNavbar from './components/AppNavbar';
 // import ShoppingList from './components/ShoppingList';
 import { Provider } from 'react-redux';
@@ -18,16 +19,18 @@ class App extends Component {
 
   render() {
     return (
-      <Provider store={store}>
-        <div className="App">
-          <AppNavbar />
-          <Container>
-              <PassResetForm>
-                
-              </PassResetForm>
-          </Container>
-        </div>
-      </Provider>
+      <Router>
+        <Provider store={store}>
+          <div className="App">
+            <AppNavbar />
+            <Container>
+              <Route exact={true} path="/api/users/resetpassword/:resetLink" component={PassResetForm} />
+              
+
+            </Container>
+          </div>
+        </Provider>
+      </Router>
     );
   }
 

@@ -12,6 +12,7 @@ const User = require('../../models/User');
 // @access  Public
 
 router.post('/', (req, res) => {
+  console.log("Post @ root");
   const { email, password } = req.body;
 
   // Simple Validation

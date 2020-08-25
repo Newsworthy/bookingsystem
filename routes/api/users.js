@@ -40,7 +40,7 @@ router.post("/", (req, res) => {
         newUser.save().then((user) => {
           jwt.sign(
             { id: user.id },
-            config.get("jwtSecret"),
+            process.env.JWT_SECRET,
             { expiresIn: 3600 },
             (err, token) => {
               if (err) throw err;
@@ -121,21 +121,25 @@ router.put('/forgotpassword', (req, res) => {
 
           // }
           // main().catch(console.error);
-          console.log("Link: " + process.env.CLIENT_URL + "/api/users/resetpassword/" + token)
-          return res.status(200).json({ msg: `An email has been sent to ${email} with further instructions` })
+          const fullResetLink = process.env.CLIENT_URL + "/api/users/resetpassword/" + token;
+          console.log("Link: " + fullResetLink)
+          return res.status(200).json({ msg: `An email has been sent to ${email} with further instructions.` })
         }
       })
     })
   };
 });
 
-// @route PUT api/users/resetpassword
+// @route GET api/users/resetpassword
 // @desc Take link from email and reset password
 // @access  Public
 
-router.get('/resetpassword/:resetLink', (req, res) => {
-  console.log("router.get('/resetpassword/:resetLink'");
-  const { resetLink } = req.params;
+router.get('/resetpassword/:resetlink', (req, res) => {
+  
+  console.log("req.params: " + JSON.stringify(req.params));
+  console.log("req.body " + JSON.stringify(req.body));
+  const resetLink = req.params.resetlink;
+  console.log("resetLink? " + resetLink);
   // verify the reset link is genuine
   jwt.verify(resetLink, process.env.JWT_SECRET, function (err, decodedData) {
     if (err) {
@@ -199,31 +203,3 @@ router.put('/resetpassword/:resetLink', (req, res) => {
 });
 
 module.exports = router;
-
-
-// async function main() {
-//   const testAccount = await nodemailer.createTestAccount();
-//   // console.log("Client URL is: " + process.env.CLIENT_URL)
-//   const transporter = nodemailer.createTransport({
-//     host: "smtp.ethereal.email",
-//     port: 587,
-//     secure: false,
-//     auth: {
-//       user: testAccount.user,
-//       pass: testAccount.pass,
-//     },
-//   }),
-
-//     info = await transporter.sendMail({
-//       from: '<derp@herp.com>',
-//       to: user.email,
-//       subject: "Password reset",
-//       text: `Hi there. You, or someone with your email address has requested a password change. If so, please copy and paste this link in your browser: ${process.env.CLIENT_URL}/api/users/resetpassword/${token}/ - Of course, if this wasn't you, then don't do a thing. Someone is screwing around, and you might want to change your email password to be safe. This link will expire in fifteen minutes.`,
-//       html: `<strong>Password reset requested</strong><p>Hi there.</p><p>You, or someone with your email address has requested a password change. If so, please click this link to reset your password: <a href='${process.env.CLIENT_URL}/api/users/resetpassword/${token}/'>Reset Password</a></p><p>Of course, if this wasn't you, then don't do a thing. Someone is screwing around, and you might want to change your email password to be safe.</p><p>This link will expire in fifteen minutes.</p>`
-//     });
-
-//   console.log("Message sent: %s", info.messageId);
-//   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-
-// }
-// main().catch(console.error);

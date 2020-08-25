@@ -28,20 +28,66 @@ class PassResetForm extends Component {
         email: "",
         password: "",
         msg: null,
-        resetLink: null,
+        resetLink: "test",
     };
 
     static propTypes = {
         isAuthenticated: PropTypes.bool,
         error: PropTypes.object.isRequired,
-        // register: PropTypes.func.isRequired,
+        resetLink: PropTypes.string.isRequired,
         clearErrors: PropTypes.func.isRequired,
     };
 
     componentDidMount() {
-        // console.log(this.props.match.params.token);
-        //Here I need to get the token from the address loaded, and set it to resetLink.
+        const { resetLink } = this.props.match.params;
+        const { error, isAuthenticated } = this.props;
+        
+
+        if (!resetLink) {
+            console.log("!resetLink");
+            this.setState({ msg: "Token error" });
+        } else {          
+
+            console.log("resetLink!");
+            this.setState({
+                resetLink: resetLink
+            }, (resetLink) => {
+                console.log("updated state:", resetLink)
+                console.log("resetLink state within: " + this.state.resetLink);
+                this.props.startPassReset(resetLink);
+            });
+            console.log("resetLink is: " + resetLink);
+
+        }
+        console.log("Here we go");
     }
+        // if (error !== prevProps.error) {
+        //     // Check for register error
+        //     if (error.id === "RESET_FAIL") {
+        //         this.setState({ msg: error.msg.msg });
+        //     } else {
+        //         this.setState({ msg: null });
+        //     }
+        // }
+
+        // this.setState({ resetLink: this.props.match.params.resetLink});
+        // const response = await startPassReset(resetLink);
+        // console.log("response = " + response);
+        // console.log("This: " + JSON.stringify(this.props))
+
+        // if (!this.props.match.params.resetLink) {
+        //     console.log("No token found");
+        //     this.setState({ msg: "No valid reset token" });
+        // }
+
+        
+        // this.setState({ msg: this.props.match.params.resetLink})
+        // console.log("resetLink state: " + this.state.resetLink)
+        // console.log("msg state: " + this.state.msg)
+
+        // console.log("Response: " + response);
+        //Here I need to get the token from the address loaded, and set it to resetLink.
+    
 
     componentDidUpdate(prevProps) {
         const { error, isAuthenticated, auth } = this.props;
@@ -65,14 +111,12 @@ class PassResetForm extends Component {
 
     toggle = () => {
         console.log();
-        startPassReset();
-        
-        // console.log(req.params);
+        // startPassReset();
+
         this.setState({
-          modal: !this.state.modal,
-        //   resetLink: req.params.resetLink,
+            modal: !this.state.modal,
         });
-      };
+    };
 
     onChange = (e) => {
         this.setState({ [e.target.name]: e.target.value });
@@ -114,6 +158,7 @@ class PassResetForm extends Component {
 
     render() {
         // const {resetLink} = req.params;
+        // console.log()
         const { isAuthenticated } = this.props;
         // console.log("Reset Link: " + resetLink);
         return (
@@ -121,41 +166,50 @@ class PassResetForm extends Component {
                 {isAuthenticated ? null : (
                     <Container>
                         <Row>
-                            <Col Col sm="12" md={{ size: 6, offset: 3 }}>
-                                <Button onClick={this.toggle} color="dark" style={{ marginTop: "2rem" }} block>
-                                    Reset Password
-                            </Button>
-                            <Modal isOpen={this.state.modal} toggle={this.toggle}>
-                            <ModalHeader>
-
-                            
+                            <Col sm="12" md={{ size: 6, offset: 3 }}>
                                 {this.state.msg ? (
-                                    <Alert color="danger">{this.state.msg}</Alert>
-                                ) : null}
-                                </ModalHeader>
-                                <Form onSubmit={this.onSubmit}>
-                                    <FormGroup>
-                                        <Label for="email">Enter your new password</Label>
-                                        <Input
-                                            type="password"
-                                            name="newPass"
-                                            id="newPass"
-                                            placeholder="New Password"
-                                            onChange={this.onChange}
-                                        />
-                                        <Input
-                                            type="password"
-                                            name="newPassMatch"
-                                            id="newPassMatch"
-                                            placeholder="Retype New Password"
-                                            onChange={this.onChange}
-                                        />
-                                        <Button color="dark" style={{ marginTop: "2rem" }} block>
-                                            Submit New Password
-                            </Button>
-                                    </FormGroup>
-                                </Form>
-                                </Modal>
+                                    <Alert align="center" color="danger">{this.state.msg}</Alert>
+                                ) : (
+                                        <>
+                                            <Button onClick={this.toggle} color="dark" style={{ marginTop: "2rem" }} block>
+                                                Reset Password
+                                </Button>
+                                            <Modal isOpen={this.state.modal} toggle={this.toggle}>
+                                                <ModalHeader>
+                                                    <h2 align="center">Reset Password</h2>
+                                                    {this.state.msg ? (
+                                                        <Alert align="center" color="danger">{this.state.msg}</Alert>
+                                                    ) : null}
+                                                </ModalHeader>
+                                                <Row>
+                                                    <Col sm="12" md={{ size: 6, offset: 3 }}>
+                                                        <Form onSubmit={this.onSubmit}>
+                                                            <FormGroup>
+                                                                <Label for="email">Enter your new password</Label>
+                                                                <Input
+                                                                    type="password"
+                                                                    name="newPass"
+                                                                    id="newPass"
+                                                                    placeholder="New Password"
+                                                                    onChange={this.onChange}
+                                                                />
+                                                                <Input
+                                                                    type="password"
+                                                                    name="newPassMatch"
+                                                                    id="newPassMatch"
+                                                                    placeholder="Retype New Password"
+                                                                    onChange={this.onChange}
+                                                                />
+                                                                <Button color="dark" style={{ marginTop: "2rem" }} block>
+                                                                    Submit New Password
+                                                    </Button>
+                                                            </FormGroup>
+                                                        </Form>
+                                                    </Col>
+                                                </Row>
+                                            </Modal>
+                                        </>
+                                    )}
                             </Col>
                         </Row>
 
@@ -171,7 +225,8 @@ class PassResetForm extends Component {
 const mapStateToProps = (state) => ({
     error: state.error,
     auth: state.auth,
+    resetLink: state.resetLink,
 })
 
 
-export default connect(mapStateToProps, { passReset, clearErrors })(PassResetForm)
+export default connect(mapStateToProps, { passReset, clearErrors, startPassReset })(PassResetForm)

@@ -16,3 +16,4 @@ export const PASS_RESET = "PASS_RESET";
 export const PASS_FORGOT = "PASS_FORGOT";
 export const RESET_FAIL = "RESET_FAIL";
 export const START_PASS_RESET = "START_PASS_RESET";
+export const RESET_TOKEN_SUCCESS = "RESET_TOKEN_SUCCESS";

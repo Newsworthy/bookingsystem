@@ -6,7 +6,6 @@ import {
   LOGIN_FAIL,
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
-  REGISTER_FAIL,
   PASS_RESET,
   PASS_FORGOT,
   START_PASS_RESET,
@@ -46,7 +45,6 @@ export default function (state = initialState, action) {
     case AUTH_ERROR:
     case LOGIN_FAIL:
     case LOGOUT_SUCCESS:
-    case REGISTER_FAIL:
       localStorage.removeItem("token");
       return {
         ...state,
@@ -57,6 +55,13 @@ export default function (state = initialState, action) {
       };
     case PASS_RESET:
     case START_PASS_RESET:
+      return {
+        state,
+        token: null,
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+      }
     case PASS_FORGOT:
       return {
         ...state,
@@ -67,6 +72,7 @@ export default function (state = initialState, action) {
         isAuthenticated: false,
         isLoading: false,
       };
+
     default:
       return state;
   }

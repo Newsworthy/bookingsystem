@@ -14,6 +14,7 @@ import {
   RESET_FAIL,
   PASS_FORGOT,
   START_PASS_RESET,
+  RESET_TOKEN_SUCCESS,
 } from './types';
 
 // Check token & load user
@@ -133,20 +134,24 @@ export const passForgot = ({ email }) => dispatch => {
     });
 };
 
-export const startPassReset = ({ resetLink }) => dispatch => {
+export const startPassReset = () => async dispatch => {
+  const resetLink = "derp";
+  dispatch({ 
+    type: START_PASS_RESET
+   });
+  // console.log("Props? "+ this.props.match);
+  // Here is where resetLink is failing!
   console.log("startPassReset Begins");
-
-  const config = {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
-  
+  // console.log("resetLink is: " + resetLink);
+  // console.log("this.state? " + this.state);
+  // console.log("getState: " + JSON.stringify(getState()));
+  // console.log("this.props.match is " + this.props.match)
+  // console.log(getProps());
   axios
-    .get(`/api/users/resetpassword/${resetLink}`, {}, config)
+    .get('/api/users/resetpassword/' + resetLink, {})
     .then(res =>
       dispatch({
-        type: START_PASS_RESET,
+        type: RESET_TOKEN_SUCCESS,
         payload: res.data
       })
     )
