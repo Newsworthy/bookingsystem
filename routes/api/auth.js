@@ -12,7 +12,6 @@ const User = require('../../models/User');
 // @access  Public
 
 router.post('/', (req, res) => {
-  console.log("Post @ root");
   const { email, password } = req.body;
 
   // Simple Validation
@@ -58,6 +57,13 @@ router.get('/user', auth, (req, res) => {
   console.log("router.get('/user'");
   User.findById(req.user.id)
     .select('-password')
+    .then(user => res.json(user));
+});
+
+router.get('/users/:user', auth, (req, res) => {
+  console.log("router.get('/users/:user'");
+  User.findById(req.user.id)
+    // .select('-password')
     .then(user => res.json(user));
 });
 

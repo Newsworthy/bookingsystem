@@ -9,6 +9,7 @@ import {
   PASS_RESET,
   PASS_FORGOT,
   START_PASS_RESET,
+  LOAD_USER_PROFILE
 } from "../actions/types";
 
 const initialState = {
@@ -27,6 +28,7 @@ export default function (state = initialState, action) {
         isLoading: true,
       };
     case USER_LOADED:
+    case LOAD_USER_PROFILE:
       return {
         ...state,
         isAuthenticated: true,
@@ -56,7 +58,7 @@ export default function (state = initialState, action) {
     case PASS_RESET:
     case START_PASS_RESET:
       return {
-        state,
+        ...state,
         token: null,
         user: null,
         isAuthenticated: false,

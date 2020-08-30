@@ -34,21 +34,21 @@ class ResetModal extends Component {
 
     if (auth !== prevProps.auth) {
       if (auth.msg !== null) {
-        this.setState({ msg: auth.msg})
+        this.setState({ msg: auth.msg })
       } else {
         this.setState({ msg: null });
       }
-    }    
+    }
 
     if (error !== prevProps.error) {
       // Check for register error
       if (error.id === "RESET_FAIL") {
         this.setState({ msg: error.msg.msg });
-      }  else {
+      } else {
         this.setState({ msg: null });
-      } 
-    } 
-    
+      }
+    }
+
     //If authenticated close modal
     if (this.state.modal) {
       if (isAuthenticated) {
@@ -95,10 +95,10 @@ class ResetModal extends Component {
 
 
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
-          <ModalHeader toggle={this.toggle}>Reset Password</ModalHeader>
+          <ModalHeader toggle={this.toggle}><h2 align="center">Reset Password</h2></ModalHeader>
           <ModalBody>
             {this.state.msg ? (
-              <Alert color="danger">{this.state.msg}</Alert>
+              <Alert align="center" color="danger">{this.state.msg}</Alert>
             ) : null}
             <Form onSubmit={this.onSubmit}>
               <FormGroup>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { returnErrors } from './errorActions';
-
+// import React from 'react';
 import {
   USER_LOADED,
   USER_LOADING,
@@ -15,6 +15,7 @@ import {
   PASS_FORGOT,
   START_PASS_RESET,
   RESET_TOKEN_SUCCESS,
+  LOAD_USER_PROFILE
 } from './types';
 
 // Check token & load user
@@ -105,6 +106,30 @@ export const logout = () => {
   };
 };
 
+// Load User Profile
+export const loadUserProfile = (dispatch, user, getState) => {
+  console.log("Loading user profile for " + user)
+  // console.log("getState: " + getState())
+  return {
+    type: LOAD_USER_PROFILE
+  };
+
+  axios
+    .get('/api/auth/users/:user', tokenConfig(getState))
+    .then(res =>
+      dispatch({
+        type: USER_LOADED,
+        payload: res.data
+      })
+    )
+    .catch(err => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch({
+        type: AUTH_ERROR
+      });
+    });
+};
+
 // Initiate password reset
 export const passForgot = ({ email }) => dispatch => {
   // console.log("passReset activated for " + email)
@@ -134,19 +159,11 @@ export const passForgot = ({ email }) => dispatch => {
     });
 };
 
-export const startPassReset = () => async dispatch => {
-  const resetLink = "derp";
-  dispatch({ 
+export const startPassReset = (resetLink) => async dispatch => {
+  dispatch({
     type: START_PASS_RESET
-   });
-  // console.log("Props? "+ this.props.match);
-  // Here is where resetLink is failing!
+  });
   console.log("startPassReset Begins");
-  // console.log("resetLink is: " + resetLink);
-  // console.log("this.state? " + this.state);
-  // console.log("getState: " + JSON.stringify(getState()));
-  // console.log("this.props.match is " + this.props.match)
-  // console.log(getProps());
   axios
     .get('/api/users/resetpassword/' + resetLink, {})
     .then(res =>
@@ -165,7 +182,7 @@ export const startPassReset = () => async dispatch => {
     });
 }
 
-export const passReset = ({ newPass, resetLink }) => dispatch => {
+export const passReset = (newPass, newPassMatch, resetLink) => async dispatch => {
   // console.log("passReset activated for " + email)
   const config = {
     headers: {
@@ -173,7 +190,7 @@ export const passReset = ({ newPass, resetLink }) => dispatch => {
     }
   };
 
-  const body = JSON.stringify({ newPass, resetLink });
+  const body = JSON.stringify({ newPass, newPassMatch });
   // console.log("Body is: " + body);
   axios
     .put('/api/users/resetpassword/' + resetLink, body, config)

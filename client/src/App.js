@@ -11,6 +11,7 @@ import { loadUser } from './actions/authActions';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import PassResetForm from './components/auth/PassResetForm';
+import UserProfile from './components/auth/UserProfile';
 
 class App extends Component {
   componentDidMount() {
@@ -25,7 +26,7 @@ class App extends Component {
             <AppNavbar />
             <Container>
               <Route exact={true} path="/api/users/resetpassword/:resetLink" component={PassResetForm} />
-              
+              <Route exact={true} path="/api/auth/:user" component={UserProfile} />
 
             </Container>
           </div>

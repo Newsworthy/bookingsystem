@@ -160,8 +160,9 @@ router.get('/resetpassword/:resetlink', (req, res) => {
 
 router.put('/resetpassword/:resetLink', (req, res) => {
   console.log("router.put('/resetpassword/:resetLink'");
-  const { resetLink } = req.params;
+  const resetLink = req.params.resetLink;
   const { newPass, newPassMatch } = req.body;
+  console.log("resetLink: " + resetLink)
   if (newPass !== newPassMatch) {
     return res.status(400).json({ msg: "Passwords don't match, please try again." })
   }
